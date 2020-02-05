@@ -4,6 +4,7 @@
  */
 
 
+#include "da.h"
 #include "htable.h"
 #include "sll.h"
 #include <assert.h>
@@ -30,22 +31,22 @@ HTNODE *newHTNODE(void *key, void *value) {
     return node;
 }
 
-void setHTNODEkeyDisplay(HTNODE *node, void (*display)(void *, FILE *)) {
+void setHTNODEdisplayKey(HTNODE *node, void (*display)(void *, FILE *)) {
     assert(node != NULL);
     node->displayKey = display;
 }
 
-void setHTNODEkeyFree(HTNODE *node, void (*free)(void *)) {
+void setHTNODEfreeKey(HTNODE *node, void (*free)(void *)) {
     assert(node != NULL);
     node->freeKey = free;
 }
 
-void setHTNODEvalueDisplay(HTNODE *node, void (*display)(void *, FILE *)) {
+void setHTNODEdisplayValue(HTNODE *node, void (*display)(void *, FILE *)) {
     assert(node != NULL);
     node->displayValue = display;
 }
 
-void setHTNODEvalueFree(HTNODE *node, void (*free)(void *)) {
+void setHTNODEfreeValue(HTNODE *node, void (*free)(void *)) {
     assert(node != NULL);
     node->freeValue = free;
 }
@@ -76,9 +77,12 @@ void freeHTNODE(HTNODE *node) {
 struct HTABLE {
     int size;
     int debugLevel;
+    DA *store;
 
-    void (*display)(void *, FILE *);
-    void (*free)(void *);
+    void (*displayKey)(void *, FILE *);
+    void (*displayValue)(void *, FILE *);
+    void (*freeKey)(void *);
+    void (*freeValue)(void *);
 };
 
 
@@ -95,14 +99,46 @@ HTABLE *newHTABLE(void) {
     return table;
 }
 
-void setHTABLEdisplay(HTABLE *table, void (*display)(void *, FILE *)) {
+void setHTABLEdisplayKey(HTABLE *table, void (*display)(void *, FILE *)) {
     assert(table != NULL);
-    table->display = display;
+    table->displayKey= display;
 }
 
-void setHTABLEfree(HTABLE *table, void (*free)(void *)) {
+void setHTABLEdisplayValue(HTABLE *table, void (*display)(void *, FILE *)) {
     assert(table != NULL);
-    table->free = free;
+    table->displayValue = display;
+}
+
+void setHTABLEfreeKey(HTABLE *table, void (*free)(void *)) {
+    assert(table != NULL);
+    table->freeKey= free;
+}
+
+void setHTABLEfreeValue(HTABLE *table, void (*free)(void *)) {
+    assert(table != NULL);
+    table->freeValue = free;
+}
+
+int isHTABLEempty(HTABLE *table) {
+    assert(table != NULL);
+    return table->size == 0;
+}
+
+int sizeHTABLE(HTABLE *table) {
+    assert(table != NULL);
+    return table->size;
+}
+
+int debugHTABLE(HTABLE *table, int level) {
+    assert(table !=NULL);
+    assert(level >= 0);
+    table->debugLevel = level;
+    debugDA(table->store, level);
+}
+
+void freeHTABLE(HTABLE *table) {
+    assert(table != NULL);
+    freeDA(table->store);
 }
 
 

@@ -11,8 +11,10 @@
 typedef struct HTABLE HTABLE;
 
 extern HTABLE *newHTABLE(void);
-extern void    setHTABLEdisplay(HTABLE *table, void (*display)(void *, FILE *));
-extern void    setHTABLEfree(HTABLE *table, void (*free)(void *));
+extern void    setHTABLEdisplayKey(HTABLE *table, void (*display)(void *, FILE *));
+extern void    setHTABLEdisplayValue(HTABLE *table, void (*display)(void *, FILE *));
+extern void    setHTABLEfreeKey(HTABLE *table, void (*free)(void *));
+extern void    setHTABLEfreeValue(HTABLE *table, void (*free)(void *));
 extern void    insertHTABLE(HTABLE *table, void *key, void *value);
 extern void   *removeHTABLE(HTABLE *table, void *key);
 extern int     findKey(HTABLE *table, void *key);
