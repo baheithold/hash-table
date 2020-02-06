@@ -1,2 +1,2 @@
-# htable
-This is a Hash Table module
+# hashmap
+This is a Hash Map module
