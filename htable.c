@@ -37,14 +37,14 @@ void setHTNODEdisplayKey(HTNODE *node, void (*display)(void *, FILE *)) {
     node->displayKey = display;
 }
 
-void setHTNODEfreeKey(HTNODE *node, void (*free)(void *)) {
-    assert(node != NULL);
-    node->freeKey = free;
-}
-
 void setHTNODEdisplayValue(HTNODE *node, void (*display)(void *, FILE *)) {
     assert(node != NULL);
     node->displayValue = display;
+}
+
+void setHTNODEfreeKey(HTNODE *node, void (*free)(void *)) {
+    assert(node != NULL);
+    node->freeKey = free;
 }
 
 void setHTNODEfreeValue(HTNODE *node, void (*free)(void *)) {
