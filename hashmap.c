@@ -1,12 +1,12 @@
 /*
  *  Author: Brett Heithold
- *  File:   htable.c
+ *  File:   hmap.c
  *  Last Modified:  5 Feb 2020
  */
 
 
 #include "da.h"
-#include "htable.h"
+#include "hashmap.h"
 #include "sll.h"
 #include <assert.h>
 #include <stdio.h>
@@ -23,36 +23,36 @@ typedef struct htnode {
     void (*freeKey)(void *);
     void (*displayValue)(void *, FILE *);
     void (*freeValue)(void *);
-} HTNODE;
+} HNODE;
 
-HTNODE *newHTNODE(void *key, void *value) {
-    HTNODE *node = malloc(sizeof(HTNODE));
+HNODE *newHNODE(void *key, void *value) {
+    HNODE *node = malloc(sizeof(HNODE));
     node->key = key;
     node->value = value;
     return node;
 }
 
-void setHTNODEdisplayKey(HTNODE *node, void (*display)(void *, FILE *)) {
+void setHNODEdisplayKey(HNODE *node, void (*display)(void *, FILE *)) {
     assert(node != NULL);
     node->displayKey = display;
 }
 
-void setHTNODEdisplayValue(HTNODE *node, void (*display)(void *, FILE *)) {
+void setHNODEdisplayValue(HNODE *node, void (*display)(void *, FILE *)) {
     assert(node != NULL);
     node->displayValue = display;
 }
 
-void setHTNODEfreeKey(HTNODE *node, void (*free)(void *)) {
+void setHNODEfreeKey(HNODE *node, void (*free)(void *)) {
     assert(node != NULL);
     node->freeKey = free;
 }
 
-void setHTNODEfreeValue(HTNODE *node, void (*free)(void *)) {
+void setHNODEfreeValue(HNODE *node, void (*free)(void *)) {
     assert(node != NULL);
     node->freeValue = free;
 }
 
-void displayHTNODE(HTNODE *node, FILE *fp) {
+void displayHNODE(HNODE *node, FILE *fp) {
     assert(node != NULL);
     fprintf(fp, "(");
     if (node->displayKey == NULL) {
@@ -69,7 +69,7 @@ void displayHTNODE(HTNODE *node, FILE *fp) {
     fprintf(fp, ")");
 }
 
-void freeHTNODE(HTNODE *node) {
+void freeHNODE(HNODE *node) {
     assert(node != NULL);
     if (node->key != NULL && node->freeKey != NULL) {
         node->freeKey(node->key);
@@ -83,7 +83,7 @@ void freeHTNODE(HTNODE *node) {
 
 /********** Hash Table Struct **********/
 
-struct HTABLE {
+struct HASHMAP {
     int size;
     int debugLevel;
     double loadFactor;
@@ -101,54 +101,54 @@ struct HTABLE {
 
 /********** Public Method Definitions **********/
 
-HTABLE *newHTABLE(void) {
-    HTABLE *table = malloc(sizeof(HTABLE));
-    assert(table != NULL);
-    table->size = 0;
-    table->debugLevel = 0;
-    return table;
+HASHMAP *newHASHMAP(void) {
+    HASHMAP *map = malloc(sizeof(HASHMAP));
+    assert(map != NULL);
+    map->size = 0;
+    map->debugLevel = 0;
+    return map;
 }
 
-void setHTABLEdisplayKey(HTABLE *table, void (*display)(void *, FILE *)) {
-    assert(table != NULL);
-    table->displayKey= display;
+void setHASHMAPdisplayKey(HASHMAP *map, void (*display)(void *, FILE *)) {
+    assert(map != NULL);
+    map->displayKey= display;
 }
 
-void setHTABLEdisplayValue(HTABLE *table, void (*display)(void *, FILE *)) {
-    assert(table != NULL);
-    table->displayValue = display;
+void setHASHMAPdisplayValue(HASHMAP *map, void (*display)(void *, FILE *)) {
+    assert(map != NULL);
+    map->displayValue = display;
 }
 
-void setHTABLEfreeKey(HTABLE *table, void (*free)(void *)) {
-    assert(table != NULL);
-    table->freeKey= free;
+void setHASHMAPfreeKey(HASHMAP *map, void (*free)(void *)) {
+    assert(map != NULL);
+    map->freeKey= free;
 }
 
-void setHTABLEfreeValue(HTABLE *table, void (*free)(void *)) {
-    assert(table != NULL);
-    table->freeValue = free;
+void setHASHMAPfreeValue(HASHMAP *map, void (*free)(void *)) {
+    assert(map != NULL);
+    map->freeValue = free;
 }
 
-int isHTABLEempty(HTABLE *table) {
-    assert(table != NULL);
-    return table->size == 0;
+int isHASHMAPempty(HASHMAP *map) {
+    assert(map != NULL);
+    return map->size == 0;
 }
 
-int sizeHTABLE(HTABLE *table) {
-    assert(table != NULL);
-    return table->size;
+int sizeHASHMAP(HASHMAP *map) {
+    assert(map != NULL);
+    return map->size;
 }
 
-int debugHTABLE(HTABLE *table, int level) {
-    assert(table !=NULL);
+int debugHASHMAP(HASHMAP *map, int level) {
+    assert(map !=NULL);
     assert(level >= 0);
-    table->debugLevel = level;
-    debugDA(table->store, level);
+    map->debugLevel = level;
+    debugDA(map->store, level);
 }
 
-void freeHTABLE(HTABLE *table) {
-    assert(table != NULL);
-    freeDA(table->store);
+void freeHASHMAP(HASHMAP *map) {
+    assert(map != NULL);
+    freeDA(map->store);
 }
 
 

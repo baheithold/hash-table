@@ -1,9 +1,9 @@
-OBJS = integer.o real.o string.o htable.o da.o sll.o test-htable.o
-EXECS = test-htable
+OBJS = integer.o real.o string.o hashmap.o da.o sll.o test-hashmap.o
+EXECS = test-hashmap
 OOPTS = -Wall -Wextra -std=c99 -g -c
 LOPTS = -Wall -Wextra -g
 
-all: 	$(OBJS) test-htable
+all: 	$(OBJS) test-hashmap
 
 ###############################################################################
 # 													Modules for Primitive Types
@@ -31,29 +31,29 @@ sll.o: 	sll.c sll.h
 
 ###############################################################################
 # 																		HTABLE
-htable.o: 	htable.c htable.h da.h sll.h
-		gcc $(OOPTS) htable.c
+hashmap.o: 	hashmap.c hashmap.h da.h sll.h
+		gcc $(OOPTS) hashmap.c
 
 ###############################################################################
 # 																		TEST
-test-htable.o: 	test-htable.c htable.c htable.h sll.c sll.h integer.c \
-				integer.h real.c real.h string.c string.h
-		gcc $(OOPTS) ./test-htable.c
+test-hashmap.o: 	test-hashmap.c hashmap.c hashmap.h sll.c sll.h integer.c \
+					integer.h real.c real.h string.c string.h
+		gcc $(OOPTS) ./test-hashmap.c
 
-test-htable: 	$(OBJS)
-		gcc $(LOPTS) $(OBJS) -o test-htable
+test-hashmap: 	$(OBJS)
+		gcc $(LOPTS) $(OBJS) -o test-hashmap
 
-test: 	test-htable
+test: 	test-hashmap
 		clear
 		@echo Testing...
-		@./test-htable
+		@./test-hashmap
 
 ###############################################################################
 # 																		VALGRIND
-valgrind: 	test-htable
+valgrind: 	test-hashmap
 		clear
 		@echo Testing with Valgrind...
-		@valgrind ./test-htable
+		@valgrind ./test-hashmap
 
 ###############################################################################
 # 																		CLEAN
