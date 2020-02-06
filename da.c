@@ -108,10 +108,9 @@ void *removeDA(DA *items, int index) {
 void unionDA(DA *recipient, DA *donor) {
     assert(recipient != NULL);
     assert(donor != NULL);
-    for (int i = 0; i < donor->size; ++i) {
-        insertDA(recipient, recipient->size, removeDA(donor, 0));
+    for (int i = ARRAY_FRONT; i < donor->size; ++i) {
+        insertDA(recipient, recipient->size, removeDA(donor, ARRAY_FRONT));
     }
-    free(donor);
 }
 
 void *getDA(DA *items, int index) {
@@ -177,6 +176,13 @@ int debugDA(DA *items, int level) {
     int oldLevel = items->debugLevel;
     items->debugLevel = level;
     return oldLevel;
+}
+
+void shrinkToFitDA(DA *items) {
+    assert(items != NULL);
+    int newCapacity = items->size;
+    items->store = realloc(items->store, sizeof(void *) * newCapacity);
+    items->capacity = newCapacity;
 }
 
 void freeDA(DA *items) {

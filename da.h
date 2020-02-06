@@ -16,6 +16,7 @@ extern void *setDA(DA *items, int index, void *value);
 extern int   sizeDA(DA *items);
 extern void  displayDA(DA *items, FILE *fp);
 extern int   debugDA(DA *items, int level);
+extern void  shrinkToFitDA(DA *items);
 extern void  freeDA(DA *items);
 
 #define insertDAback(items, value)      insertDA(items, sizeDA(items), value)
