@@ -1,6 +1,7 @@
 /*
  *  Author: Brett Heithold
  *  File:   htable.c
+ *  Last Modified:  5 Feb 2020
  */
 
 
@@ -54,9 +55,17 @@ void setHTNODEfreeValue(HTNODE *node, void (*free)(void *)) {
 void displayHTNODE(HTNODE *node, FILE *fp) {
     assert(node != NULL);
     fprintf(fp, "(");
-    node->displayKey(node->key, fp);
+    if (node->displayKey == NULL) {
+        // if no displayKey function is provided, print the address
+        fprintf(fp, "%p", node->key);
+    }
+    else node->displayKey(node->key, fp);
     fprintf(fp, " : ");
-    node->displayValue(node->value, fp);
+    if (node->displayValue == NULL) {
+        // if no displayValue function is provided, print the address
+        fprintf(fp, "%p", node->value);
+    }
+    else node->displayValue(node->value, fp);
     fprintf(fp, ")");
 }
 
@@ -77,6 +86,7 @@ void freeHTNODE(HTNODE *node) {
 struct HTABLE {
     int size;
     int debugLevel;
+    double loadFactor;
     DA *store;
 
     void (*displayKey)(void *, FILE *);
