@@ -13,7 +13,11 @@
 #include <stdlib.h>
 
 
-/********** Hash Table Struct **********/
+/********** Global Constants **********/
+#define INITIAL_CAPACITY 16
+
+
+/********** Hash Map Struct **********/
 
 typedef struct htnode {
     void *key;
@@ -81,10 +85,11 @@ void freeHNODE(HNODE *node) {
 }
 
 
-/********** Hash Table Struct **********/
+/********** Hash Map Struct **********/
 
 struct HASHMAP {
     int size;
+    int capacity;
     int debugLevel;
     DA *store;
 
@@ -97,6 +102,7 @@ struct HASHMAP {
 
 /********** Private Method Prototypes **********/
 static double loadFactor(HASHMAP *map);
+static int thresholdHASHMAP(HASHMAP *map);
 
 
 /********** Public Method Definitions **********/
@@ -105,7 +111,14 @@ HASHMAP *newHASHMAP(void) {
     HASHMAP *map = malloc(sizeof(HASHMAP));
     assert(map != NULL);
     map->size = 0;
+    map->capacity = INITIAL_CAPACITY;
     map->debugLevel = 0;
+    map->store = newDA();
+    // create store and initialize with singly-linked lists
+    for (int i = 0; i < map->capacity; ++i) {
+        insertDAback(map->store, newSLL(NULL, NULL));
+    }
+    shrinkToFitDA(map->store);
     return map;
 }
 
@@ -149,6 +162,7 @@ int debugHASHMAP(HASHMAP *map, int level) {
 void freeHASHMAP(HASHMAP *map) {
     assert(map != NULL);
     freeDA(map->store);
+    free(map);
 }
 
 
@@ -157,4 +171,9 @@ void freeHASHMAP(HASHMAP *map) {
 static double loadFactor(HASHMAP *map) {
     assert(map != NULL);
     return (double) map->size / (double) sizeDA(map->store);
+}
+
+static int thresholdHASHMAP(HASHMAP *map) {
+    assert(map != NULL);
+    return map->capacity * loadFactor(map);
 }
