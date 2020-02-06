@@ -143,7 +143,7 @@ int debugHASHMAP(HASHMAP *map, int level) {
     assert(map !=NULL);
     assert(level >= 0);
     map->debugLevel = level;
-    debugDA(map->store, level);
+    return debugDA(map->store, level);
 }
 
 void freeHASHMAP(HASHMAP *map) {
