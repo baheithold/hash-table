@@ -1,6 +1,7 @@
 /*
  *  Author: Brett Heithold
  *  File:   hashmap.h
+ *  Last Modified:  5 Feb 2020
  */
 
 #ifndef __HASHMAP_INCLUDED__
