@@ -16,6 +16,7 @@ extern void    setHASHMAPdisplayKey(HASHMAP *map, void (*display)(void *, FILE *
 extern void    setHASHMAPdisplayValue(HASHMAP *map, void (*display)(void *, FILE *));
 extern void    setHASHMAPfreeKey(HASHMAP *map, void (*free)(void *));
 extern void    setHASHMAPfreeValue(HASHMAP *map, void (*free)(void *));
+extern double  setHASHMAPLoadFactor(HASHMAP *map, double loadFactor);
 extern void    insertHASHMAP(HASHMAP *map, void *key, void *value);
 extern void   *removeHASHMAP(HASHMAP *map, void *key);
 extern int     findKey(HASHMAP *map, void *key);
