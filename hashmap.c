@@ -1,7 +1,7 @@
 /*
  *  Author: Brett Heithold
- *  File:   hmap.c
- *  Last Modified:  5 Feb 2020
+ *  File:   hashmap.c
+ *  Last Modified:  6 Feb 2020
  */
 
 
