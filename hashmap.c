@@ -86,7 +86,6 @@ void freeHNODE(HNODE *node) {
 struct HASHMAP {
     int size;
     int debugLevel;
-    double loadFactor;
     DA *store;
 
     void (*displayKey)(void *, FILE *);
@@ -97,6 +96,7 @@ struct HASHMAP {
 
 
 /********** Private Method Prototypes **********/
+static double loadFactor(HASHMAP *map);
 
 
 /********** Public Method Definitions **********/
@@ -153,3 +153,8 @@ void freeHASHMAP(HASHMAP *map) {
 
 
 /********** Private Method Definitions **********/
+
+static double loadFactor(HASHMAP *map) {
+    assert(map != NULL);
+    return (double) map->size / (double) sizeDA(map->store);
+}
