@@ -104,6 +104,7 @@ struct HASHMAP {
 
 /********** Private Method Prototypes **********/
 static int thresholdHASHMAP(HASHMAP *map);
+static int hash(HASHMAP *map, void *value);
 
 
 /********** Public Method Definitions **********/
@@ -181,4 +182,10 @@ void freeHASHMAP(HASHMAP *map) {
 static int thresholdHASHMAP(HASHMAP *map) {
     assert(map != NULL);
     return map->capacity * map->loadFactor;
+}
+
+static int hash(HASHMAP *map, void *value) {
+    assert(value != NULL);
+    long address = (long) value;
+    return address % map->capacity;
 }
