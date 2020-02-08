@@ -57,30 +57,30 @@ void setHNODEfreeValue(HNODE *node, void (*free)(void *)) {
     node->freeValue = free;
 }
 
-void displayHNODE(HNODE *node, FILE *fp) {
+void displayHNODE(void *node, FILE *fp) {
     assert(node != NULL);
     fprintf(fp, "(");
-    if (node->displayKey == NULL) {
+    if (((HNODE *)node)->displayKey == NULL) {
         // if no displayKey function is provided, print the address
-        fprintf(fp, "%p", node->key);
+        fprintf(fp, "%p", ((HNODE *)node)->key);
     }
-    else node->displayKey(node->key, fp);
+    else ((HNODE *)node)->displayKey(((HNODE *)node)->key, fp);
     fprintf(fp, " : ");
-    if (node->displayValue == NULL) {
+    if (((HNODE *)node)->displayValue == NULL) {
         // if no displayValue function is provided, print the address
-        fprintf(fp, "%p", node->value);
+        fprintf(fp, "%p", ((HNODE *)node)->value);
     }
-    else node->displayValue(node->value, fp);
+    else ((HNODE *)node)->displayValue(((HNODE *)node)->value, fp);
     fprintf(fp, ")");
 }
 
-void freeHNODE(HNODE *node) {
+void freeHNODE(void *node) {
     assert(node != NULL);
-    if (node->key != NULL && node->freeKey != NULL) {
-        node->freeKey(node->key);
+    if (((HNODE *)node)->key != NULL && ((HNODE *)node)->freeKey != NULL) {
+        ((HNODE *)node)->freeKey(((HNODE *)node)->key);
     }
-    if (node->value != NULL && node->freeValue != NULL) {
-        node->freeValue(node->value);
+    if (((HNODE *)node)->value != NULL && ((HNODE *)node)->freeValue != NULL) {
+        ((HNODE *)node)->freeValue(((HNODE *)node)->value);
     }
     free(node);
 }
@@ -119,7 +119,7 @@ HASHMAP *newHASHMAP(void) {
     map->store = newDA();
     // create store and initialize with singly-linked lists
     for (int i = 0; i < map->capacity; ++i) {
-        insertDAback(map->store, newSLL(NULL, NULL));
+        insertDAback(map->store, newSLL(displayHNODE, freeHNODE));
     }
     shrinkToFitDA(map->store);
     return map;
@@ -153,6 +153,28 @@ double setHASHMAPloadFactor(HASHMAP *map, double loadFactor) {
     return oldLoadFactor;
 }
 
+void insertHASHMAP(HASHMAP *map, void *key, void *value) {
+    assert(map != NULL);
+    assert(key != NULL);
+    // grow the store if the size of the map exceeds the calculated threshold
+    if (map->size > thresholdHASHMAP(map)) {
+        /* grow(map); */
+    }
+    // create HNODE for the key/value pair
+    HNODE *node = newHNODE(key, value);
+    setHNODEdisplayKey(node, map->displayKey);
+    setHNODEdisplayValue(node, map->displayValue);
+    setHNODEfreeKey(node, map->freeKey);
+    setHNODEfreeValue(node, map->freeValue);
+    // get hash value
+    int h = hash(map, value);
+    // get sll chain at correct hash index
+    SLL *chain = getDA(map->store, h);
+    // insert key/value into correct spot
+    insertSLL(chain, sizeSLL(chain), node);
+    map->size++;
+}
+
 int isHASHMAPempty(HASHMAP *map) {
     assert(map != NULL);
     return map->size == 0;
@@ -161,6 +183,26 @@ int isHASHMAPempty(HASHMAP *map) {
 int sizeHASHMAP(HASHMAP *map) {
     assert(map != NULL);
     return map->size;
+}
+
+void displayHASHMAP(HASHMAP *map, FILE *fp) {
+    assert(map != NULL);
+    if (map->debugLevel > 0) {
+        fprintf(fp, "Size: %d\n", map->size);
+        fprintf(fp, "Capacity: %d\n", map->capacity);
+        fprintf(fp, "Load Factor: %f\n", map->loadFactor);
+        fprintf(fp, "Threshold: %d\n", thresholdHASHMAP(map));
+    }
+    fprintf(fp, "[");
+    for (int i = 0; i < map->capacity; ++i) {
+        fprintf(fp, "%d: ", i);
+        if (map->debugLevel > 0) {
+            displaySLLdebug(getDA(map->store, i), fp);
+        }
+        else displaySLL(getDA(map->store, i), fp);
+        if (i < map->capacity - 1) fprintf(fp, ", ");
+    }
+    fprintf(fp, "]");
 }
 
 int debugHASHMAP(HASHMAP *map, int level) {
