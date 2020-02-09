@@ -14,7 +14,7 @@
 
 
 /********** Global Constants **********/
-#define INITIAL_CAPACITY 16
+#define INITIAL_CAPACITY 17
 #define DEFAULT_LOAD_FACTOR 0.75f
 
 
@@ -226,8 +226,9 @@ static int thresholdHASHMAP(HASHMAP *map) {
     return map->capacity * map->loadFactor;
 }
 
-static int hash(HASHMAP *map, void *value) {
-    assert(value != NULL);
-    long address = (long) value;
+static int hash(HASHMAP *map, void *key) {
+    assert(key != NULL);
+    long address = (long) key;
+    printf("%ld\n", address);
     return address % map->capacity;
 }
