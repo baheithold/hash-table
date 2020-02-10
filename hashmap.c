@@ -176,6 +176,20 @@ void insertHASHMAP(HASHMAP *map, void *key, void *value) {
     map->size++;
 }
 
+void *getHASHMAPvalue(HASHMAP *map, void *key) {
+    assert(map != NULL);
+    assert(key != NULL);
+    int index = hash(map, key);
+    SLL *chain = getDA(map->store, index);
+    for (int i = 0; i < sizeSLL(chain); ++i) {
+        if (((HNODE *)getSLL(chain, i))->key == key) {
+            return ((HNODE *)getSLL(chain, i))->value;
+        }
+    }
+    // if key is not found, return NULL
+    return NULL;
+}
+
 void clearHASHMAP(HASHMAP *map) {
     assert(map != NULL);
     // clear the store
