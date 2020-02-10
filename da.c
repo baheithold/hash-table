@@ -41,6 +41,8 @@ DA *newDA(void) {
     da->size = 0;
     da->store = malloc(sizeof(void **));
     da->debugLevel = 0;
+    da->display = NULL;
+    da->free = NULL;
     return da;
 }
 
