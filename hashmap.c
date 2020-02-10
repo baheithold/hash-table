@@ -176,6 +176,25 @@ void insertHASHMAP(HASHMAP *map, void *key, void *value) {
     map->size++;
 }
 
+void clearHASHMAP(HASHMAP *map) {
+    assert(map != NULL);
+    // clear the store
+    for (int i = 0; i < map->capacity; ++i) {
+        freeSLL(getDA(map->store, i));
+    }
+    freeDA(map->store);
+    // reset fields
+    map->size = 0;
+    map->capacity = INITIAL_CAPACITY;
+    map->loadFactor = DEFAULT_LOAD_FACTOR;
+    // create store and initialize with singly-linked lists
+    map->store = newDA();
+    for (int i = 0; i < map->capacity; ++i) {
+        insertDAback(map->store, newSLL(displayHNODE, freeHNODE));
+    }
+    shrinkToFitDA(map->store);
+}
+
 bool containsKey(HASHMAP *map, void *key) {
     assert(map != NULL);
     assert(key != NULL);

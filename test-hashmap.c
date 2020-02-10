@@ -34,6 +34,11 @@ int main(void) {
     displayHASHMAP(map, stdout);
     printf("\n");
     printf("key: var0 ... found? %d\n", containsKey(map, k0));
+    // clear the hashmap
+    clearHASHMAP(map);
+    displayHASHMAP(map, stdout);
+    printf("\n");
+    printf("key: var0 ... found? %d\n", containsKey(map, k0));
     freeHASHMAP(map);
     return 0;
 }
