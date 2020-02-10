@@ -105,7 +105,7 @@ struct HASHMAP {
 
 /********** Private Method Prototypes **********/
 static int thresholdHASHMAP(HASHMAP *map);
-static int hash(HASHMAP *map, void *value);
+static int hash(HASHMAP *map, void *key);
 
 
 /********** Public Method Definitions **********/
@@ -168,7 +168,7 @@ void insertHASHMAP(HASHMAP *map, void *key, void *value) {
     setHNODEfreeKey(node, map->freeKey);
     setHNODEfreeValue(node, map->freeValue);
     // get hash value
-    int index = hash(map, value);
+    int index = hash(map, key);
     // get sll chain at correct hash index
     SLL *chain = getDA(map->store, index);
     // insert key/value into correct spot
