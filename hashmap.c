@@ -1,7 +1,7 @@
 /*
  *  Author: Brett Heithold
  *  File:   hashmap.c
- *  Last Modified:  6 Feb 2020
+ *  Last Modified:  10 Feb 2020
  */
 
 
@@ -117,8 +117,8 @@ HASHMAP *newHASHMAP(void) {
     map->capacity = INITIAL_CAPACITY;
     map->loadFactor = DEFAULT_LOAD_FACTOR;
     map->debugLevel = 0;
-    map->store = newDA();
     // create store and initialize with singly-linked lists
+    map->store = newDA();
     for (int i = 0; i < map->capacity; ++i) {
         insertDAback(map->store, newSLL(displayHNODE, freeHNODE));
     }
@@ -229,6 +229,9 @@ int debugHASHMAP(HASHMAP *map, int level) {
 
 void freeHASHMAP(HASHMAP *map) {
     assert(map != NULL);
+    for (int i = 0; i < map->capacity; ++i) {
+        freeSLL(getDA(map->store, i));
+    }
     freeDA(map->store);
     free(map);
 }
