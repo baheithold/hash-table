@@ -186,7 +186,6 @@ void clearHASHMAP(HASHMAP *map) {
     // reset fields
     map->size = 0;
     map->capacity = INITIAL_CAPACITY;
-    map->loadFactor = DEFAULT_LOAD_FACTOR;
     // create store and initialize with singly-linked lists
     map->store = newDA();
     for (int i = 0; i < map->capacity; ++i) {
