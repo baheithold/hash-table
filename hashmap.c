@@ -9,6 +9,7 @@
 #include "hashmap.h"
 #include "sll.h"
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -167,15 +168,29 @@ void insertHASHMAP(HASHMAP *map, void *key, void *value) {
     setHNODEfreeKey(node, map->freeKey);
     setHNODEfreeValue(node, map->freeValue);
     // get hash value
-    int h = hash(map, value);
+    int index = hash(map, value);
     // get sll chain at correct hash index
-    SLL *chain = getDA(map->store, h);
+    SLL *chain = getDA(map->store, index);
     // insert key/value into correct spot
     insertSLL(chain, sizeSLL(chain), node);
     map->size++;
 }
 
-int isHASHMAPempty(HASHMAP *map) {
+bool containsKey(HASHMAP *map, void *key) {
+    assert(map != NULL);
+    assert(key != NULL);
+    int index = hash(map, key);
+    SLL *chain = getDA(map->store, index);
+    printf("index: %d\n", index);
+    for (int i = 0; i < sizeSLL(chain); ++i) {
+        if (((HNODE *)getSLL(chain, i))->key == key) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool isHASHMAPempty(HASHMAP *map) {
     assert(map != NULL);
     return map->size == 0;
 }
@@ -229,6 +244,5 @@ static int thresholdHASHMAP(HASHMAP *map) {
 static int hash(HASHMAP *map, void *key) {
     assert(key != NULL);
     long address = (long) key;
-    printf("%ld\n", address);
     return address % map->capacity;
 }

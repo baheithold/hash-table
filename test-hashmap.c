@@ -18,9 +18,8 @@ int main(void) {
     setHASHMAPfreeKey(map, freeSTRING);
     setHASHMAPfreeValue(map, freeINTEGER);
     // display the map with debug info
-    debugHASHMAP(map, 1);
     displayHASHMAP(map, stdout);
-    fprintf(stdout, "\n");
+    printf("\n");
     // play with some insertions
     STRING *k0 = newSTRING("var0");
     INTEGER *v0 = newINTEGER(0);
@@ -32,8 +31,8 @@ int main(void) {
     insertHASHMAP(map, k1, v1);
     insertHASHMAP(map, k2, v2);
     // display the map with debug info
-    debugHASHMAP(map, 1);
     displayHASHMAP(map, stdout);
-    fprintf(stdout, "\n");
+    printf("\n");
+    printf("key: var0 ... found? %d\n", containsKey(map, k0));
     return 0;
 }
