@@ -52,11 +52,12 @@ int main(void) {
     printf("key: var0 ... found? %d\n", containsKey(map, f0));
     // Remove f0 from map
     STRING *k = removeHASHMAP(map, f0);
-    freeSTRING(f0);
     displaySTRING(k, stdout);
     printf("\n");
     freeSTRING(k);
     displayHASHMAP(map, stdout);
+    printf("key: var0 ... found? %d\n", containsKey(map, f0));
+    freeSTRING(f0);
     printf("\n");
     freeHASHMAP(map);
     return 0;
