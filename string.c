@@ -33,6 +33,11 @@ char *setSTRING(STRING *p, char *v) {
     return old;
 }
 
+int lengthSTRING(STRING *str) {
+    assert(str != NULL);
+    return strlen(str->value);
+}
+
 int compareSTRING(void *str1, void *str2) {
     assert(str1 != NULL && str2 != NULL);
     return strcmp(getSTRING(str1), getSTRING(str2));

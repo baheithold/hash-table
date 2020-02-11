@@ -14,6 +14,7 @@ typedef struct STRING STRING;
 extern STRING *newSTRING(char *);
 extern char *getSTRING(STRING *);
 extern char *setSTRING(STRING *, char *);
+extern int lengthSTRING(STRING *);
 extern int compareSTRING(void *, void *);
 extern int rcompareSTRING(void *, void *);
 extern void displaySTRING(void *, FILE *);
