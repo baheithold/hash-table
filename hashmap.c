@@ -8,6 +8,7 @@
 #include "da.h"
 #include "hashmap.h"
 #include "sll.h"
+
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -15,7 +16,7 @@
 
 
 /********** Global Constants **********/
-#define INITIAL_CAPACITY 17
+#define INITIAL_CAPACITY 16
 #define DEFAULT_LOAD_FACTOR 0.75f
 
 
@@ -100,6 +101,7 @@ struct HASHMAP {
     void (*displayValue)(void *, FILE *);
     void (*freeKey)(void *);
     void (*freeValue)(void *);
+    int (*prehash)(void *);
 };
 
 
@@ -110,7 +112,7 @@ static int hash(HASHMAP *map, void *key);
 
 /********** Public Method Definitions **********/
 
-HASHMAP *newHASHMAP(void) {
+HASHMAP *newHASHMAP(int (*prehash)(void *)) {
     HASHMAP *map = malloc(sizeof(HASHMAP));
     assert(map != NULL);
     map->size = 0;
@@ -123,6 +125,7 @@ HASHMAP *newHASHMAP(void) {
         insertDAback(map->store, newSLL(displayHNODE, freeHNODE));
     }
     shrinkToFitDA(map->store);
+    map->prehash = prehash;
     return map;
 }
 
@@ -277,7 +280,7 @@ static int thresholdHASHMAP(HASHMAP *map) {
 }
 
 static int hash(HASHMAP *map, void *key) {
+    assert(map != NULL);
     assert(key != NULL);
-    long address = (long) key;
-    return address % map->capacity;
+    return 13 * map->prehash(key) % map->capacity;
 }
