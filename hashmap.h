@@ -12,7 +12,7 @@
 
 typedef struct HASHMAP HASHMAP;
 
-extern HASHMAP *newHASHMAP(int (*prehash)(void *));
+extern HASHMAP *newHASHMAP(int (*prehash)(void *), int (*comparator)(void *, void *));
 extern void    setHASHMAPdisplayKey(HASHMAP *map, void (*display)(void *, FILE *));
 extern void    setHASHMAPdisplayValue(HASHMAP *map, void (*display)(void *, FILE *));
 extern void    setHASHMAPfreeKey(HASHMAP *map, void (*free)(void *));

@@ -27,7 +27,7 @@ int prehashSTRING(void *s) {
 
 int main(void) {
     // Create and initialize the HASHMAP
-    HASHMAP *map = newHASHMAP(prehashSTRING);
+    HASHMAP *map = newHASHMAP(prehashSTRING, compareSTRING);
     setHASHMAPdisplayKey(map, displaySTRING);
     setHASHMAPdisplayValue(map, displayINTEGER);
     setHASHMAPfreeKey(map, freeSTRING);
@@ -48,12 +48,12 @@ int main(void) {
     // display the map with debug info
     displayHASHMAP(map, stdout);
     printf("\n");
-    printf("key: var0 ... found? %d\n", containsKey(map, k0));
+    printf("key: var0 ... found? %d\n", containsKey(map, newSTRING("var0")));
     // clear the hashmap
     clearHASHMAP(map);
     displayHASHMAP(map, stdout);
     printf("\n");
-    printf("key: var0 ... found? %d\n", containsKey(map, k0));
+    printf("key: var0 ... found? %d\n", containsKey(map, newSTRING("var0")));
     freeHASHMAP(map);
     return 0;
 }

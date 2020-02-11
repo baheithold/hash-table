@@ -22,7 +22,7 @@
 
 /********** Hash Map Struct **********/
 
-typedef struct htnode {
+typedef struct hnode {
     void *key;
     void *value;
 
@@ -102,6 +102,7 @@ struct HASHMAP {
     void (*freeKey)(void *);
     void (*freeValue)(void *);
     int (*prehash)(void *);
+    int (*compare)(void *, void *);
 };
 
 
@@ -112,7 +113,7 @@ static int hash(HASHMAP *map, void *key);
 
 /********** Public Method Definitions **********/
 
-HASHMAP *newHASHMAP(int (*prehash)(void *)) {
+HASHMAP *newHASHMAP(int (*prehash)(void *), int (*comparator)(void *, void *)) {
     HASHMAP *map = malloc(sizeof(HASHMAP));
     assert(map != NULL);
     map->size = 0;
@@ -126,6 +127,7 @@ HASHMAP *newHASHMAP(int (*prehash)(void *)) {
     }
     shrinkToFitDA(map->store);
     map->prehash = prehash;
+    map->compare = comparator;
     return map;
 }
 
@@ -185,7 +187,7 @@ void *getHASHMAPvalue(HASHMAP *map, void *key) {
     int index = hash(map, key);
     SLL *chain = getDA(map->store, index);
     for (int i = 0; i < sizeSLL(chain); ++i) {
-        if (((HNODE *)getSLL(chain, i))->key == key) {
+        if (map->compare(getSLL(chain, i), key) == 0) {
             return ((HNODE *)getSLL(chain, i))->value;
         }
     }
@@ -218,7 +220,7 @@ bool containsKey(HASHMAP *map, void *key) {
     SLL *chain = getDA(map->store, index);
     printf("index: %d\n", index);
     for (int i = 0; i < sizeSLL(chain); ++i) {
-        if (((HNODE *)getSLL(chain, i))->key == key) {
+        if (map->compare(((HNODE *)getSLL(chain, i))->key, key) == 0) {
             return true;
         }
     }
