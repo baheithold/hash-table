@@ -9,10 +9,25 @@
 #include "real.h"
 #include "string.h"
 
+#include <assert.h>
+
+
+int prehashSTRING(void *s) {
+    assert(s != NULL);
+    int strLength = lengthSTRING(s);
+    char *str = getSTRING(s);
+    int result = 0;
+    for (int i = 0; i < strLength; ++i) {
+        result += str[i];
+    }
+    printf("result: %d\n", result);
+    return result;
+}
+
 
 int main(void) {
     // Create and initialize the HASHMAP
-    HASHMAP *map = newHASHMAP();
+    HASHMAP *map = newHASHMAP(prehashSTRING);
     setHASHMAPdisplayKey(map, displaySTRING);
     setHASHMAPdisplayValue(map, displayINTEGER);
     setHASHMAPfreeKey(map, freeSTRING);
