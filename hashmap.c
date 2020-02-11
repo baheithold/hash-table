@@ -181,13 +181,30 @@ void insertHASHMAP(HASHMAP *map, void *key, void *value) {
     map->size++;
 }
 
+void *removeHASHMAP(HASHMAP *map, void *key) {
+    assert(map != NULL);
+    assert(key != NULL);
+    int hashIndex = hash(map, key);
+    SLL *chain = getDA(map->store, hashIndex);
+    for (int i = 0; i < sizeSLL(chain); ++i) {
+        if (map->compare(((HNODE *)getSLL(chain, i))->key, key) == 0) {
+            HNODE *node = removeSLL(chain, i);
+            void *result = node->key;
+            node->freeValue(node->value);
+            free(node);
+            return result;
+        }
+    }
+    return NULL;
+}
+
 void *getHASHMAPvalue(HASHMAP *map, void *key) {
     assert(map != NULL);
     assert(key != NULL);
     int index = hash(map, key);
     SLL *chain = getDA(map->store, index);
     for (int i = 0; i < sizeSLL(chain); ++i) {
-        if (map->compare(getSLL(chain, i), key) == 0) {
+        if (map->compare(((HNODE *)getSLL(chain, i))->key, key) == 0) {
             return ((HNODE *)getSLL(chain, i))->value;
         }
     }

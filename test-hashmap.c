@@ -48,12 +48,16 @@ int main(void) {
     // display the map with debug info
     displayHASHMAP(map, stdout);
     printf("\n");
-    printf("key: var0 ... found? %d\n", containsKey(map, newSTRING("var0")));
-    // clear the hashmap
-    clearHASHMAP(map);
+    STRING *f0 = newSTRING("var0");
+    printf("key: var0 ... found? %d\n", containsKey(map, f0));
+    // Remove f0 from map
+    STRING *k = removeHASHMAP(map, f0);
+    freeSTRING(f0);
+    displaySTRING(k, stdout);
+    printf("\n");
+    freeSTRING(k);
     displayHASHMAP(map, stdout);
     printf("\n");
-    printf("key: var0 ... found? %d\n", containsKey(map, newSTRING("var0")));
     freeHASHMAP(map);
     return 0;
 }
